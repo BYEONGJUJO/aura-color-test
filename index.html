@@ -333,6 +333,152 @@
             box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
         }
         
+        .other-tests-section {
+            background: var(--white-alpha);
+            padding: 2rem 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 2rem 0;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.8s ease-out 0.5s both;
+        }
+        
+        .other-tests-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+            font-size: 1.8rem;
+        }
+        
+        .tests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .test-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .test-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .test-card:hover::before {
+            left: 100%;
+        }
+        
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .test-card:nth-child(2) {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        .test-card:nth-child(2):hover {
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+        
+        .test-card:nth-child(3) {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        .test-card:nth-child(3):hover {
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+        
+        .test-card:nth-child(4) {
+            background: linear-gradient(135deg, #9966CC, #663399);
+            box-shadow: 0 4px 15px rgba(153, 102, 204, 0.3);
+        }
+        
+        .test-card:nth-child(4):hover {
+            box-shadow: 0 8px 25px rgba(153, 102, 204, 0.4);
+        }
+        
+        .test-card:nth-child(5) {
+            background: linear-gradient(135deg, #50C878, #32CD32);
+            box-shadow: 0 4px 15px rgba(80, 200, 120, 0.3);
+        }
+        
+        .test-card:nth-child(5):hover {
+            box-shadow: 0 8px 25px rgba(80, 200, 120, 0.4);
+        }
+        
+        .test-card:nth-child(6) {
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+        }
+        
+        .test-card:nth-child(6):hover {
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
+        }
+        
+        .test-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .test-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        .test-card p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .tests-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+            
+            .test-card {
+                padding: 1.5rem 1rem;
+            }
+            
+            .test-icon {
+                font-size: 2rem;
+            }
+            
+            .test-card h3 {
+                font-size: 1.1rem;
+            }
+            
+            .test-card p {
+                font-size: 0.85rem;
+            }
+        }
+        
         .guide-section {
             background: var(--white-alpha);
             padding: 1.5rem;
@@ -615,14 +761,30 @@
             </div>
         </section>
         
+        <!-- 다른 AI 테스트 섹션 -->
+        <section class="other-tests-section">
+            <h2>🌟 다른 재미있는 AI 테스트</h2>
+            <div class="tests-grid">
+                <div class="test-card" onclick="openTest('animal')">
+                    <div class="test-icon">🐾</div>
+                    <h3>동물상 테스트</h3>
+                    <p>당신의 동물상을 발견해보세요</p>
+                </div>
+                <div class="test-card" onclick="openTest('mbti')">
+                    <div class="test-icon">🧠</div>
+                    <h3>MBTI 얼굴 분석</h3>
+                    <p>얼굴로 알아보는 성격유형</p>
+                </div>
+                <div class="test-card" onclick="openTest('celebrity')">
+                    <div class="test-icon">⭐</div>
+                    <h3>닮은꼴 연예인</h3>
+                    <p>나와 닮은 연예인은 누구일까요?</p>
+                </div>
+            </div>
+        </section>
+
         <!-- 푸터 -->
         <footer class="footer">
-            <h3>🌟 더 많은 AI 테스트</h3>
-            <nav>
-                <a href="https://www.myanimalface.site" rel="noopener">동물상 테스트</a> | 
-                <a href="#" rel="noopener">MBTI 얼굴 분석</a> | 
-                <a href="#" rel="noopener">닮은꼴 연예인</a>
-            </nav>
             <nav style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
                 <a href="privacy.html">개인정보처리방침</a> | 
                 <a href="terms.html">이용약관</a> | 
@@ -1066,6 +1228,35 @@ ${window.location.href}`;
                 restartTest();
             } else {
                 uploadSection.scrollIntoView({behavior: 'smooth'});
+            }
+        }
+
+        // 다른 테스트 열기
+        function openTest(testType) {
+            const tests = {
+                animal: {
+                    title: '🐾 동물상 테스트',
+                    description: '당신의 동물상을 발견하는 재미있는 테스트입니다!',
+                    url: '#'
+                },
+                mbti: {
+                    title: '🧠 MBTI 얼굴 분석',
+                    description: '얼굴로 알아보는 성격유형 테스트입니다!',
+                    url: '#'
+                },
+                celebrity: {
+                    title: '⭐ 닮은꼴 연예인',
+                    description: '나와 닮은 연예인을 찾아보는 테스트입니다!',
+                    url: '#'
+                }
+            };
+            
+            const test = tests[testType];
+            if (test) {
+                alert(`${test.title}\n\n${test.description}\n\n준비중입니다! 곧 만나요 🎉`);
+                
+                // 실제 구현시에는 해당 테스트 페이지로 이동
+                // window.open(test.url, '_blank');
             }
         }
 
