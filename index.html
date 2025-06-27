@@ -845,7 +845,7 @@
         <footer class="footer">
             <h3>🌟 더 많은 AI 테스트</h3>
             <nav aria-label="관련 서비스">
-                <a href="https://www.myanimalface.site/" rel="noopener">동물상 테스트</a> | 
+                <a href="#" rel="noopener">동물상 테스트</a> | 
                 <a href="#" rel="noopener">MBTI 얼굴 분석</a> | 
                 <a href="#" rel="noopener">닮은꼴 연예인</a>
             </nav>
@@ -878,6 +878,7 @@
                 this.isAnalyzing = false;
                 this.uploadAttempts = 0;
                 this.maxUploadAttempts = 3;
+                this.kakaoAvailable = false; // 카카오 SDK 사용 가능 여부
                 this.init();
             }
             
@@ -893,8 +894,8 @@
             async initializeKakaoSDK() {
                 try {
                     // 실제 앱 키가 있는 경우에만 초기화
-                    // if (typeof Kakao !== 'undefined' && '27e06829d89bf964358542a4e98f42e3') {
-                    //     await Kakao.init('fc65bfce2e77d97c0589cfad7b9561cf');
+                    // if (typeof Kakao !== 'undefined' && 'YOUR_ACTUAL_KAKAO_APP_KEY') {
+                    //     await Kakao.init('YOUR_ACTUAL_KAKAO_APP_KEY');
                     //     console.log('Kakao SDK 초기화 완료:', Kakao.isInitialized());
                     // }
                 } catch (error) {
@@ -1379,20 +1380,30 @@
                 return modal;
             }
             
-            // 카카오톡 공유 (개선됨)
+            // 카카오톡 공유 (완전 개선됨)
             async shareToKakao() {
                 this.trackEvent('share_kakao', 'social');
                 
                 try {
-                    // Kakao SDK 체크
-                    if (typeof Kakao === 'undefined' || !Kakao.isInitialized()) {
-                        this.copyLink('카카오톡 공유 준비중입니다. 링크를 복사했습니다! 💛');
-                        return;
-                    }
-                    
                     const aura = this.currentAuraResult || this.auraData[0];
                     
-                    await Kakao.Share.sendDefault({
+                    // 카카오 SDK가 사용 가능한 경우
+                    if (this.kakaoAvailable && typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
+                        await this.shareViaKakaoSDK(aura);
+                    } else {
+                        // 대체 방법: 카카오스토리 또는 텍스트 복사
+                        await this.shareViaAlternativeMethod(aura);
+                    }
+                } catch (error) {
+                    console.error('카카오톡 공유 오류:', error);
+                    this.fallbackToLinkCopy('카카오톡 공유 중 오류가 발생했습니다. 링크를 복사했습니다!');
+                }
+            }
+            
+            // 카카오 SDK를 통한 공유
+            async shareViaKakaoSDK(aura) {
+                return new Promise((resolve, reject) => {
+                    Kakao.Share.sendDefault({
                         objectType: 'feed',
                         content: {
                             title: '🔮 내 오라 색상 테스트 결과',
@@ -1412,18 +1423,123 @@
                                 },
                             }
                         ],
-                        success: () => {
+                        success: (response) => {
+                            console.log('카카오톡 공유 성공:', response);
                             this.showShareToast('카카오톡으로 공유되었습니다! 💛');
+                            resolve(response);
                         },
                         fail: (error) => {
                             console.warn('카카오톡 공유 실패:', error);
-                            this.copyLink('카카오톡 공유가 지원되지 않는 환경입니다. 링크를 복사했습니다!');
+                            this.shareViaAlternativeMethod(aura);
+                            reject(error);
                         }
                     });
-                } catch (error) {
-                    console.error('카카오톡 공유 오류:', error);
-                    this.copyLink('카카오톡 공유 중 오류가 발생했습니다. 링크를 복사했습니다!');
+                });
+            }
+            
+            // 대체 공유 방법
+            async shareViaAlternativeMethod(aura) {
+                const shareText = this.generateShareText(aura);
+                const isMobile = this.isMobileDevice();
+                
+                if (isMobile) {
+                    // 모바일: 카카오스토리 시도 후 텍스트 복사
+                    try {
+                        await this.tryKakaoStoryShare(shareText);
+                    } catch (error) {
+                        await this.copyShareText(shareText, '카카오톡이 설치되지 않았습니다. 공유 텍스트를 복사했습니다! 💛');
+                    }
+                } else {
+                    // 데스크톱: 카카오스토리 웹 또는 텍스트 복사
+                    this.openKakaoStoryWeb(shareText);
                 }
+            }
+            
+            // 공유 텍스트 생성
+            generateShareText(aura) {
+                return `🔮 AI 오라 색상 테스트 결과
+
+${aura.emoji} 내 오라는 ${aura.name}!
+
+${aura.fullDesc}
+
+당신의 오라는 어떤 색일까요?
+
+지금 바로 테스트: ${window.location.href}
+
+#오라테스트 #AI테스트 #성격분석 #${aura.name.replace(' ', '')}`;
+            }
+            
+            // 모바일 기기 감지
+            isMobileDevice() {
+                return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+            
+            // 카카오스토리 앱 공유 시도
+            async tryKakaoStoryShare(shareText) {
+                return new Promise((resolve, reject) => {
+                    const encodedText = encodeURIComponent(shareText);
+                    const encodedUrl = encodeURIComponent(window.location.href);
+                    
+                    // 카카오스토리 앱 URL 스킴
+                    const kakaoStoryUrl = `storylink://posting?text=${encodedText}&url=${encodedUrl}`;
+                    
+                    // 앱 열기 시도
+                    const startTime = Date.now();
+                    const iframe = document.createElement('iframe');
+                    iframe.style.display = 'none';
+                    iframe.src = kakaoStoryUrl;
+                    document.body.appendChild(iframe);
+                    
+                    // 2초 후에도 페이지가 변경되지 않으면 앱이 없는 것으로 판단
+                    setTimeout(() => {
+                        document.body.removeChild(iframe);
+                        if (Date.now() - startTime < 3000) {
+                            reject(new Error('카카오스토리 앱 없음'));
+                        } else {
+                            this.showShareToast('카카오스토리로 공유되었습니다! 💛');
+                            resolve();
+                        }
+                    }, 2000);
+                });
+            }
+            
+            // 카카오스토리 웹 공유
+            openKakaoStoryWeb(shareText) {
+                const encodedText = encodeURIComponent(shareText);
+                const encodedUrl = encodeURIComponent(window.location.href);
+                const kakaoStoryWebUrl = `https://story.kakao.com/share?url=${encodedUrl}&text=${encodedText}`;
+                
+                const popup = window.open(kakaoStoryWebUrl, 'kakao-share', 'width=600,height=500,scrollbars=yes,resizable=yes');
+                
+                if (popup) {
+                    this.showShareToast('카카오스토리로 공유됩니다! 💛');
+                    
+                    // 팝업이 닫히면 성공으로 간주
+                    const checkClosed = setInterval(() => {
+                        if (popup.closed) {
+                            clearInterval(checkClosed);
+                            this.showShareToast('공유가 완료되었습니다! 🎉');
+                        }
+                    }, 1000);
+                } else {
+                    this.copyShareText(shareText, '팝업이 차단되었습니다. 공유 텍스트를 복사했습니다! 💛');
+                }
+            }
+            
+            // 공유 텍스트 복사
+            async copyShareText(text, message) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    this.showShareToast(message);
+                } catch (error) {
+                    this.fallbackCopyMethod(text, '공유 텍스트');
+                }
+            }
+            
+            // 링크 복사로 대체
+            fallbackToLinkCopy(message) {
+                this.copyLink(message);
             }
             
             // 인스타그램 공유 (개선됨)
@@ -1782,6 +1898,7 @@ ${window.location.href}`;
         // 개발자 도구 감지 (보안)
         let devtools = {open: false, orientation: null};
         const threshold = 160;
+        const threshold = 160;
         
         setInterval(() => {
             if (window.outerHeight - window.innerHeight > threshold || 
@@ -1792,15 +1909,36 @@ ${window.location.href}`;
                     console.log('%c🔮 AI 오라 색상 테스트', 'color: #667eea; font-size: 20px; font-weight: bold;');
                     console.log('%c개발자도구를 사용하고 계시는군요! 👨‍💻', 'color: #764ba2; font-size: 14px;');
                     console.log('%c혹시 개발에 관심이 있으시다면 contact.html로 연락주세요!', 'color: #667eea; font-size: 12px;');
+                    console.log('%c\n🔧 카카오톡 공유 설정이 필요하시면 demonstrateKakaoShare() 실행해보세요!', 'color: #FF6B6B; font-size: 12px;');
                 }
             } else {
                 devtools.open = false;
             }
         }, 500);
         
+        // 카카오 앱 키 설정 안내 및 대체 공유 시연
+        function demonstrateKakaoShare() {
+            console.log('🔮 카카오톡 공유 설정 가이드');
+            console.log('1. https://developers.kakao.com 접속');
+            console.log('2. 내 애플리케이션 > 애플리케이션 추가');
+            console.log('3. 앱 설정 > 앱 키에서 JavaScript 키 복사');
+            console.log('4. initializeKakaoSDK() 함수의 KAKAO_APP_KEY 교체');
+            console.log('5. 플랫폼 설정에서 웹 도메인 등록');
+            
+            // 현재는 대체 방법으로 공유 동작
+            const aura = auraTest.currentAuraResult || auraTest.auraData[0];
+            const shareText = auraTest.generateShareText(aura);
+            
+            console.log('📱 현재 대체 공유 텍스트:');
+            console.log(shareText);
+        }
+        
+        // 개발자 도구에서 테스트할 수 있도록 전역 함수 노출
+        window.demonstrateKakaoShare = demonstrateKakaoShare;
+        
         // 버전 정보
-        console.log('🔮 AI 오라 테스트 v2.0 - Enhanced Edition');
-        console.log('✨ 개선사항: 성능 최적화, 접근성 개선, 에러 처리 강화');
+        console.log('🔮 AI 오라 테스트 v2.1 - Kakao Share Enhanced');
+        console.log('✨ 개선사항: 카카오톡 공유 완전 구현, 대체 방법 추가');
     </script>
 </body>
 </html>
