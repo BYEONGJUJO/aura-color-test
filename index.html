@@ -1253,10 +1253,14 @@ ${window.location.href}`;
             
             const test = tests[testType];
             if (test) {
-                alert(`${test.title}\n\n${test.description}\n\n준비중입니다! 곧 만나요 🎉`);
-                
-                // 실제 구현시에는 해당 테스트 페이지로 이동
-                // window.open(test.url, '_blank');
+                if (testType === 'animal') {
+                    // 동물상 테스트는 실제 사이트로 이동
+                    window.open(test.url, '_blank');
+                    showShareToast('🐾 동물상 테스트로 이동합니다!');
+                } else {
+                    // 다른 테스트들은 준비중 메시지
+                    alert(`${test.title}\n\n${test.description}\n\n준비중입니다! 곧 만나요 🎉`);
+                }
             }
         }
 
