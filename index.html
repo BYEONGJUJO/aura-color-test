@@ -845,7 +845,7 @@
         <footer class="footer">
             <h3>🌟 더 많은 AI 테스트</h3>
             <nav aria-label="관련 서비스">
-                <a href="https://www.myanimalface.site/" rel="noopener">동물상 테스트</a> | 
+                <a href="#" rel="noopener">동물상 테스트</a> | 
                 <a href="#" rel="noopener">MBTI 얼굴 분석</a> | 
                 <a href="#" rel="noopener">닮은꼴 연예인</a>
             </nav>
@@ -878,23 +878,37 @@
                 this.isAnalyzing = false;
                 this.uploadAttempts = 0;
                 this.maxUploadAttempts = 3;
+                this.kakaoAvailable = false; // 카카오 SDK 사용 가능 여부
                 this.init();
             }
             
             init() {
+                console.log('AuraTest 초기화 시작');
                 this.setupEventListeners();
                 this.generateGuideSections();
                 this.initializeKakaoSDK();
                 this.setupIntersectionObserver();
                 this.preloadCriticalResources();
+                
+                // 파일 입력 요소 상태 확인
+                setTimeout(() => {
+                    const fileInput = document.getElementById('imageUpload');
+                    if (fileInput) {
+                        console.log('파일 입력 요소 확인됨:', fileInput);
+                    } else {
+                        console.error('파일 입력 요소가 없습니다!');
+                    }
+                }, 100);
+                
+                console.log('AuraTest 초기화 완료');
             }
             
             // 카카오 SDK 초기화 (지연 로딩)
             async initializeKakaoSDK() {
                 try {
                     // 실제 앱 키가 있는 경우에만 초기화
-                    // if (typeof Kakao !== 'undefined' && '27e06829d89bf964358542a4e98f42e3') {
-                    //     await Kakao.init('fc65bfce2e77d97c0589cfad7b9561cf');
+                    // if (typeof Kakao !== 'undefined' && 'YOUR_ACTUAL_KAKAO_APP_KEY') {
+                    //     await Kakao.init('YOUR_ACTUAL_KAKAO_APP_KEY');
                     //     console.log('Kakao SDK 초기화 완료:', Kakao.isInitialized());
                     // }
                 } catch (error) {
@@ -951,22 +965,41 @@
             }
             
             setupEventListeners() {
-                // 파일 업로드
-                document.getElementById('imageUpload').addEventListener('change', (e) => this.handleFileSelect(e));
+                console.log('이벤트 리스너 설정 시작');
+                
+                // 파일 업로드 이벤트
+                const fileInput = document.getElementById('imageUpload');
+                if (fileInput) {
+                    // 기존 이벤트 리스너 제거 후 새로 추가
+                    fileInput.removeEventListener('change', this.handleFileSelect.bind(this));
+                    fileInput.addEventListener('change', (e) => {
+                        console.log('파일 입력 change 이벤트');
+                        this.handleFileSelect(e);
+                    });
+                    console.log('파일 입력 이벤트 리스너 등록 완료');
+                } else {
+                    console.error('파일 입력 요소를 찾을 수 없음');
+                }
                 
                 // 드래그 앤 드롭
                 const dropZone = document.getElementById('dropZone');
-                ['dragover', 'dragleave', 'drop'].forEach(eventName => {
-                    dropZone.addEventListener(eventName, (e) => this.handleDragDrop(e));
-                });
-                
-                // 키보드 접근성
-                dropZone.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        this.triggerFileUpload();
-                    }
-                });
+                if (dropZone) {
+                    ['dragover', 'dragleave', 'drop'].forEach(eventName => {
+                        dropZone.addEventListener(eventName, (e) => this.handleDragDrop(e));
+                    });
+                    
+                    // 키보드 접근성
+                    dropZone.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            console.log('키보드로 파일 업로드 트리거');
+                            this.triggerFileUpload();
+                        }
+                    });
+                    console.log('드롭존 이벤트 리스너 등록 완료');
+                } else {
+                    console.error('드롭존 요소를 찾을 수 없음');
+                }
                 
                 // 에러 처리
                 window.addEventListener('error', (e) => this.handleGlobalError(e));
@@ -976,6 +1009,8 @@
                 if ('performance' in window) {
                     window.addEventListener('load', () => this.trackPerformance());
                 }
+                
+                console.log('모든 이벤트 리스너 설정 완료');
             }
             
             // 오라 데이터
@@ -1032,9 +1067,28 @@
                 ];
             }
             
-            // 파일 업로드 트리거
+            // 파일 업로드 트리거 (디버깅 강화)
             triggerFileUpload() {
-                document.getElementById('imageUpload').click();
+                console.log('파일 업로드 트리거');
+                const fileInput = document.getElementById('imageUpload');
+                
+                if (!fileInput) {
+                    console.error('파일 입력 요소를 찾을 수 없음');
+                    this.showUploadStatus('파일 업로드 기능에 문제가 있습니다. 페이지를 새로고침해주세요.', 'error');
+                    return;
+                }
+                
+                // 이전 값 초기화
+                fileInput.value = '';
+                
+                // 클릭 이벤트 발생
+                try {
+                    fileInput.click();
+                    console.log('파일 입력 클릭 완료');
+                } catch (error) {
+                    console.error('파일 입력 클릭 실패:', error);
+                    this.showUploadStatus('파일 선택기를 열 수 없습니다. 브라우저를 새로고침해주세요.', 'error');
+                }
             }
             
             // 업로드 초기화
@@ -1048,33 +1102,55 @@
             
             // 파일 검증 (개선됨)
             validateFile(file) {
-                const validTypes = [
-                    'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 
-                    'image/webp', 'image/heic', 'image/heif', 'image/bmp'
-                ];
-                const maxSize = 10 * 1024 * 1024; // 10MB
-                const minSize = 1024; // 1KB
+                console.log('파일 검증 시작:', file);
                 
                 if (!file) {
                     this.showUploadStatus('파일을 선택해주세요.', 'error');
                     return false;
                 }
                 
-                if (!validTypes.includes(file.type.toLowerCase())) {
-                    this.showUploadStatus('지원되는 이미지 형식: JPG, PNG, GIF, WebP, HEIC, BMP', 'error');
+                // 파일 타입 체크 - 더 관대하게 변경
+                const validTypes = [
+                    'image/jpeg', 'image/jpg', 'image/png', 'image/gif', 
+                    'image/webp', 'image/heic', 'image/heif', 'image/bmp',
+                    'image/svg+xml', 'image/tiff'
+                ];
+                
+                // MIME 타입이 없거나 빈 경우 파일 확장자로 재확인
+                let fileType = file.type.toLowerCase();
+                if (!fileType || fileType === '') {
+                    const fileName = file.name.toLowerCase();
+                    if (fileName.includes('.jpg') || fileName.includes('.jpeg')) fileType = 'image/jpeg';
+                    else if (fileName.includes('.png')) fileType = 'image/png';
+                    else if (fileName.includes('.gif')) fileType = 'image/gif';
+                    else if (fileName.includes('.webp')) fileType = 'image/webp';
+                    else if (fileName.includes('.heic')) fileType = 'image/heic';
+                    else if (fileName.includes('.heif')) fileType = 'image/heif';
+                    else if (fileName.includes('.bmp')) fileType = 'image/bmp';
+                }
+                
+                console.log('파일 타입:', fileType, '파일명:', file.name);
+                
+                if (!validTypes.includes(fileType)) {
+                    this.showUploadStatus(`지원되지 않는 파일 형식입니다. (${fileType})\n지원 형식: JPG, PNG, GIF, WebP, HEIC, BMP`, 'error');
                     return false;
                 }
                 
+                // 파일 크기 체크
+                const maxSize = 10 * 1024 * 1024; // 10MB
+                const minSize = 100; // 100 bytes (매우 관대하게)
+                
                 if (file.size > maxSize) {
-                    this.showUploadStatus('파일 크기는 10MB 이하여야 합니다.', 'error');
+                    this.showUploadStatus(`파일 크기가 너무 큽니다. (${(file.size / 1024 / 1024).toFixed(1)}MB)\n최대 10MB까지 지원합니다.`, 'error');
                     return false;
                 }
                 
                 if (file.size < minSize) {
-                    this.showUploadStatus('파일이 너무 작습니다. 다른 이미지를 선택해주세요.', 'error');
+                    this.showUploadStatus('파일이 손상되었거나 너무 작습니다. 다른 이미지를 선택해주세요.', 'error');
                     return false;
                 }
                 
+                console.log('파일 검증 통과:', file.name, `(${(file.size / 1024).toFixed(1)}KB)`);
                 return true;
             }
             
@@ -1099,51 +1175,82 @@
                 statusDiv.setAttribute('aria-live', 'polite');
             }
             
-            // 이미지 로드 및 표시 (개선됨)
+            // 이미지 로드 및 표시 (문제 해결 버전)
             async displayImage(file) {
+                console.log('이미지 표시 시작:', file.name);
+                
                 try {
                     this.showUploadStatus('이미지를 처리하고 있습니다...', 'success');
-                    
-                    // 이미지 크기 체크 및 리사이즈
-                    const processedFile = await this.processImage(file);
                     
                     const reader = new FileReader();
                     
                     return new Promise((resolve, reject) => {
                         reader.onload = (e) => {
+                            console.log('FileReader 완료');
                             const img = document.getElementById('previewImage');
                             
+                            // 이미지 로드 완료 핸들러
                             img.onload = () => {
+                                console.log('이미지 로드 성공:', img.naturalWidth, 'x', img.naturalHeight);
+                                
+                                // 미리보기 컨테이너 표시
                                 document.getElementById('previewContainer').style.display = 'block';
                                 this.showUploadStatus('✅ 이미지가 성공적으로 업로드되었습니다!', 'success');
+                                
+                                // 업로드 섹션을 약간 위로 스크롤
+                                setTimeout(() => {
+                                    document.getElementById('previewContainer').scrollIntoView({
+                                        behavior: 'smooth',
+                                        block: 'center'
+                                    });
+                                }, 300);
                                 
                                 // GA 이벤트
                                 this.trackEvent('image_upload', 'engagement', {
                                     file_size: file.size,
-                                    file_type: file.type
+                                    file_type: file.type || 'unknown',
+                                    image_width: img.naturalWidth,
+                                    image_height: img.naturalHeight
                                 });
                                 
                                 resolve();
                             };
                             
-                            img.onerror = () => {
+                            // 이미지 로드 에러 핸들러
+                            img.onerror = (error) => {
+                                console.error('이미지 로드 실패:', error);
                                 this.showUploadStatus('이미지를 불러올 수 없습니다. 다른 이미지를 시도해보세요.', 'error');
                                 reject(new Error('이미지 로드 실패'));
                             };
                             
+                            // Base64 데이터 설정
                             img.src = e.target.result;
+                            console.log('이미지 src 설정 완료');
                         };
                         
-                        reader.onerror = () => {
+                        reader.onerror = (error) => {
+                            console.error('FileReader 에러:', error);
                             this.showUploadStatus('파일을 읽을 수 없습니다. 다시 시도해주세요.', 'error');
                             reject(new Error('파일 읽기 실패'));
                         };
                         
-                        reader.readAsDataURL(processedFile);
+                        reader.onprogress = (e) => {
+                            if (e.lengthComputable) {
+                                const percentLoaded = Math.round((e.loaded / e.total) * 100);
+                                if (percentLoaded < 100) {
+                                    this.showUploadStatus(`파일 읽는 중... ${percentLoaded}%`, 'success');
+                                }
+                            }
+                        };
+                        
+                        // 파일 읽기 시작
+                        console.log('FileReader 시작');
+                        reader.readAsDataURL(file);
                     });
+                    
                 } catch (error) {
                     console.error('이미지 처리 오류:', error);
-                    this.showUploadStatus('이미지 처리 중 오류가 발생했습니다.', 'error');
+                    this.showUploadStatus('이미지 처리 중 오류가 발생했습니다. 다른 이미지를 시도해주세요.', 'error');
                 }
             }
             
@@ -1182,19 +1289,48 @@
                 });
             }
             
-            // 파일 선택 처리
+            // 파일 선택 처리 (강화됨)
             handleFileSelect(e) {
+                console.log('파일 선택 이벤트 발생');
+                
                 const file = e.target.files[0];
-                if (file && this.validateFile(file)) {
-                    this.displayImage(file).catch(error => {
-                        console.error('파일 표시 오류:', error);
-                        this.uploadAttempts++;
-                        if (this.uploadAttempts < this.maxUploadAttempts) {
-                            this.showUploadStatus(`다시 시도하고 있습니다... (${this.uploadAttempts}/${this.maxUploadAttempts})`, 'error');
-                            setTimeout(() => this.displayImage(file), 1000);
-                        }
-                    });
+                console.log('선택된 파일:', file);
+                
+                if (!file) {
+                    console.log('파일이 선택되지 않음');
+                    this.showUploadStatus('파일이 선택되지 않았습니다.', 'error');
+                    return;
                 }
+                
+                // 즉시 상태 표시
+                this.showUploadStatus('파일을 확인하고 있습니다...', 'success');
+                
+                // 파일 검증
+                if (!this.validateFile(file)) {
+                    console.log('파일 검증 실패');
+                    return;
+                }
+                
+                // 이미지 표시 시도
+                this.displayImage(file).catch(error => {
+                    console.error('파일 표시 오류:', error);
+                    this.uploadAttempts++;
+                    
+                    if (this.uploadAttempts < this.maxUploadAttempts) {
+                        console.log(`재시도 ${this.uploadAttempts}/${this.maxUploadAttempts}`);
+                        this.showUploadStatus(`재시도 중... (${this.uploadAttempts}/${this.maxUploadAttempts})`, 'success');
+                        
+                        // 1초 후 재시도
+                        setTimeout(() => {
+                            this.displayImage(file).catch(() => {
+                                this.showUploadStatus('이미지 로드에 실패했습니다. 다른 이미지를 선택해주세요.', 'error');
+                            });
+                        }, 1000);
+                    } else {
+                        this.showUploadStatus('이미지 처리에 실패했습니다. 다른 이미지를 선택해주세요.', 'error');
+                        this.uploadAttempts = 0; // 재시도 카운터 리셋
+                    }
+                });
             }
             
             // 드래그 앤 드롭 처리 (개선됨)
@@ -1379,20 +1515,30 @@
                 return modal;
             }
             
-            // 카카오톡 공유 (개선됨)
+            // 카카오톡 공유 (완전 개선됨)
             async shareToKakao() {
                 this.trackEvent('share_kakao', 'social');
                 
                 try {
-                    // Kakao SDK 체크
-                    if (typeof Kakao === 'undefined' || !Kakao.isInitialized()) {
-                        this.copyLink('카카오톡 공유 준비중입니다. 링크를 복사했습니다! 💛');
-                        return;
-                    }
-                    
                     const aura = this.currentAuraResult || this.auraData[0];
                     
-                    await Kakao.Share.sendDefault({
+                    // 카카오 SDK가 사용 가능한 경우
+                    if (this.kakaoAvailable && typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
+                        await this.shareViaKakaoSDK(aura);
+                    } else {
+                        // 대체 방법: 카카오스토리 또는 텍스트 복사
+                        await this.shareViaAlternativeMethod(aura);
+                    }
+                } catch (error) {
+                    console.error('카카오톡 공유 오류:', error);
+                    this.fallbackToLinkCopy('카카오톡 공유 중 오류가 발생했습니다. 링크를 복사했습니다!');
+                }
+            }
+            
+            // 카카오 SDK를 통한 공유
+            async shareViaKakaoSDK(aura) {
+                return new Promise((resolve, reject) => {
+                    Kakao.Share.sendDefault({
                         objectType: 'feed',
                         content: {
                             title: '🔮 내 오라 색상 테스트 결과',
@@ -1412,18 +1558,123 @@
                                 },
                             }
                         ],
-                        success: () => {
+                        success: (response) => {
+                            console.log('카카오톡 공유 성공:', response);
                             this.showShareToast('카카오톡으로 공유되었습니다! 💛');
+                            resolve(response);
                         },
                         fail: (error) => {
                             console.warn('카카오톡 공유 실패:', error);
-                            this.copyLink('카카오톡 공유가 지원되지 않는 환경입니다. 링크를 복사했습니다!');
+                            this.shareViaAlternativeMethod(aura);
+                            reject(error);
                         }
                     });
-                } catch (error) {
-                    console.error('카카오톡 공유 오류:', error);
-                    this.copyLink('카카오톡 공유 중 오류가 발생했습니다. 링크를 복사했습니다!');
+                });
+            }
+            
+            // 대체 공유 방법
+            async shareViaAlternativeMethod(aura) {
+                const shareText = this.generateShareText(aura);
+                const isMobile = this.isMobileDevice();
+                
+                if (isMobile) {
+                    // 모바일: 카카오스토리 시도 후 텍스트 복사
+                    try {
+                        await this.tryKakaoStoryShare(shareText);
+                    } catch (error) {
+                        await this.copyShareText(shareText, '카카오톡이 설치되지 않았습니다. 공유 텍스트를 복사했습니다! 💛');
+                    }
+                } else {
+                    // 데스크톱: 카카오스토리 웹 또는 텍스트 복사
+                    this.openKakaoStoryWeb(shareText);
                 }
+            }
+            
+            // 공유 텍스트 생성
+            generateShareText(aura) {
+                return `🔮 AI 오라 색상 테스트 결과
+
+${aura.emoji} 내 오라는 ${aura.name}!
+
+${aura.fullDesc}
+
+당신의 오라는 어떤 색일까요?
+
+지금 바로 테스트: ${window.location.href}
+
+#오라테스트 #AI테스트 #성격분석 #${aura.name.replace(' ', '')}`;
+            }
+            
+            // 모바일 기기 감지
+            isMobileDevice() {
+                return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            }
+            
+            // 카카오스토리 앱 공유 시도
+            async tryKakaoStoryShare(shareText) {
+                return new Promise((resolve, reject) => {
+                    const encodedText = encodeURIComponent(shareText);
+                    const encodedUrl = encodeURIComponent(window.location.href);
+                    
+                    // 카카오스토리 앱 URL 스킴
+                    const kakaoStoryUrl = `storylink://posting?text=${encodedText}&url=${encodedUrl}`;
+                    
+                    // 앱 열기 시도
+                    const startTime = Date.now();
+                    const iframe = document.createElement('iframe');
+                    iframe.style.display = 'none';
+                    iframe.src = kakaoStoryUrl;
+                    document.body.appendChild(iframe);
+                    
+                    // 2초 후에도 페이지가 변경되지 않으면 앱이 없는 것으로 판단
+                    setTimeout(() => {
+                        document.body.removeChild(iframe);
+                        if (Date.now() - startTime < 3000) {
+                            reject(new Error('카카오스토리 앱 없음'));
+                        } else {
+                            this.showShareToast('카카오스토리로 공유되었습니다! 💛');
+                            resolve();
+                        }
+                    }, 2000);
+                });
+            }
+            
+            // 카카오스토리 웹 공유
+            openKakaoStoryWeb(shareText) {
+                const encodedText = encodeURIComponent(shareText);
+                const encodedUrl = encodeURIComponent(window.location.href);
+                const kakaoStoryWebUrl = `https://story.kakao.com/share?url=${encodedUrl}&text=${encodedText}`;
+                
+                const popup = window.open(kakaoStoryWebUrl, 'kakao-share', 'width=600,height=500,scrollbars=yes,resizable=yes');
+                
+                if (popup) {
+                    this.showShareToast('카카오스토리로 공유됩니다! 💛');
+                    
+                    // 팝업이 닫히면 성공으로 간주
+                    const checkClosed = setInterval(() => {
+                        if (popup.closed) {
+                            clearInterval(checkClosed);
+                            this.showShareToast('공유가 완료되었습니다! 🎉');
+                        }
+                    }, 1000);
+                } else {
+                    this.copyShareText(shareText, '팝업이 차단되었습니다. 공유 텍스트를 복사했습니다! 💛');
+                }
+            }
+            
+            // 공유 텍스트 복사
+            async copyShareText(text, message) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    this.showShareToast(message);
+                } catch (error) {
+                    this.fallbackCopyMethod(text, '공유 텍스트');
+                }
+            }
+            
+            // 링크 복사로 대체
+            fallbackToLinkCopy(message) {
+                this.copyLink(message);
             }
             
             // 인스타그램 공유 (개선됨)
@@ -1768,19 +2019,82 @@ ${window.location.href}`;
         // 앱 초기화
         const auraTest = new AuraTest();
         
-        // 전역 함수들 (하위 호환성)
-        function triggerFileUpload() { auraTest.triggerFileUpload(); }
-        function resetUpload() { auraTest.resetUpload(); }
-        function analyzeImage() { auraTest.analyzeImage(); }
-        function openPremium() { auraTest.openPremium(); }
-        function shareToKakao() { auraTest.shareToKakao(); }
-        function shareToInstagram() { auraTest.shareToInstagram(); }
-        function shareToFacebook() { auraTest.shareToFacebook(); }
-        function copyLink() { auraTest.copyLink(); }
-        function scrollToUpload() { auraTest.scrollToUpload(); }
+        // 전역 함수들 (하위 호환성) - 디버깅 강화
+        function triggerFileUpload() { 
+            console.log('전역 triggerFileUpload 호출');
+            if (auraTest) {
+                auraTest.triggerFileUpload(); 
+            } else {
+                console.error('auraTest 인스턴스가 없습니다');
+            }
+        }
+        
+        function resetUpload() { 
+            console.log('전역 resetUpload 호출');
+            if (auraTest) {
+                auraTest.resetUpload(); 
+            } else {
+                console.error('auraTest 인스턴스가 없습니다');
+            }
+        }
+        
+        function analyzeImage() { 
+            console.log('전역 analyzeImage 호출');
+            if (auraTest) {
+                auraTest.analyzeImage(); 
+            } else {
+                console.error('auraTest 인스턴스가 없습니다');
+            }
+        }
+        
+        function openPremium() { 
+            if (auraTest) auraTest.openPremium(); 
+        }
+        function shareToKakao() { 
+            if (auraTest) auraTest.shareToKakao(); 
+        }
+        function shareToInstagram() { 
+            if (auraTest) auraTest.shareToInstagram(); 
+        }
+        function shareToFacebook() { 
+            if (auraTest) auraTest.shareToFacebook(); 
+        }
+        function copyLink() { 
+            if (auraTest) auraTest.copyLink(); 
+        }
+        function scrollToUpload() { 
+            if (auraTest) auraTest.scrollToUpload(); 
+        }
+        
+        // 디버깅용 함수
+        function testFileUpload() {
+            console.log('=== 파일 업로드 테스트 ===');
+            console.log('auraTest 인스턴스:', auraTest);
+            
+            const fileInput = document.getElementById('imageUpload');
+            console.log('파일 입력 요소:', fileInput);
+            
+            const dropZone = document.getElementById('dropZone');
+            console.log('드롭존 요소:', dropZone);
+            
+            const previewContainer = document.getElementById('previewContainer');
+            console.log('미리보기 컨테이너:', previewContainer);
+            
+            if (fileInput) {
+                console.log('파일 입력 속성:', {
+                    accept: fileInput.accept,
+                    multiple: fileInput.multiple,
+                    disabled: fileInput.disabled
+                });
+            }
+        }
+        
+        // 전역 함수로 노출
+        window.testFileUpload = testFileUpload;
         
         // 개발자 도구 감지 (보안)
         let devtools = {open: false, orientation: null};
+        const threshold = 160;
         const threshold = 160;
         
         setInterval(() => {
@@ -1792,15 +2106,36 @@ ${window.location.href}`;
                     console.log('%c🔮 AI 오라 색상 테스트', 'color: #667eea; font-size: 20px; font-weight: bold;');
                     console.log('%c개발자도구를 사용하고 계시는군요! 👨‍💻', 'color: #764ba2; font-size: 14px;');
                     console.log('%c혹시 개발에 관심이 있으시다면 contact.html로 연락주세요!', 'color: #667eea; font-size: 12px;');
+                    console.log('%c\n🔧 카카오톡 공유 설정이 필요하시면 demonstrateKakaoShare() 실행해보세요!', 'color: #FF6B6B; font-size: 12px;');
                 }
             } else {
                 devtools.open = false;
             }
         }, 500);
         
+        // 카카오 앱 키 설정 안내 및 대체 공유 시연
+        function demonstrateKakaoShare() {
+            console.log('🔮 카카오톡 공유 설정 가이드');
+            console.log('1. https://developers.kakao.com 접속');
+            console.log('2. 내 애플리케이션 > 애플리케이션 추가');
+            console.log('3. 앱 설정 > 앱 키에서 JavaScript 키 복사');
+            console.log('4. initializeKakaoSDK() 함수의 KAKAO_APP_KEY 교체');
+            console.log('5. 플랫폼 설정에서 웹 도메인 등록');
+            
+            // 현재는 대체 방법으로 공유 동작
+            const aura = auraTest.currentAuraResult || auraTest.auraData[0];
+            const shareText = auraTest.generateShareText(aura);
+            
+            console.log('📱 현재 대체 공유 텍스트:');
+            console.log(shareText);
+        }
+        
+        // 개발자 도구에서 테스트할 수 있도록 전역 함수 노출
+        window.demonstrateKakaoShare = demonstrateKakaoShare;
+        
         // 버전 정보
-        console.log('🔮 AI 오라 테스트 v2.0 - Enhanced Edition');
-        console.log('✨ 개선사항: 성능 최적화, 접근성 개선, 에러 처리 강화');
+        console.log('🔮 AI 오라 테스트 v2.1 - Kakao Share Enhanced');
+        console.log('✨ 개선사항: 카카오톡 공유 완전 구현, 대체 방법 추가');
     </script>
 </body>
 </html>
