@@ -3,48 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔮 내 오라 색상은? - AI 오라 테스트 | 무료 성격 분석</title>
-    <meta name="description" content="AI가 얼굴을 분석해 당신만의 오라 색상을 알려드립니다! 감정 분석으로 성격까지 파악하는 신비한 테스트. 지금 바로 무료로 체험해보세요!">
+    <title>🔮 AI 오라 색상 테스트 | 내 오라는 무슨 색?</title>
+    <meta name="description" content="AI가 얼굴을 분석해 당신만의 오라 색상을 알려드립니다! 감정 분석으로 성격까지 파악하는 신비한 테스트">
     <meta name="keywords" content="오라테스트,AI성격분석,얼굴분석,오라색상,무료테스트,심리테스트,MBTI,관상,운세">
     
-    <!-- Open Graph for KakaoTalk -->
-    <meta property="og:type" content="website">
+    <!-- Open Graph -->
     <meta property="og:title" content="🔮 AI 오라 색상 테스트 - 내 오라는 무슨 색?">
-    <meta property="og:description" content="AI가 당신의 얼굴을 분석해 오라 색상을 알려드립니다! 지금 바로 무료 테스트 해보세요!">
-    <meta property="og:image" content="https://www.myauracolorcheck.site/og-image.jpg">
-    <meta property="og:url" content="https://www.myauracolorcheck.site">
+    <meta property="og:description" content="AI가 당신의 얼굴을 분석해 오라 색상을 알려드립니다!">
+    <meta property="og:image" content="https://your-domain.com/og-image.jpg">
+    <meta property="og:url" content="https://your-domain.com">
     
-    <!-- Kakao JavaScript SDK -->
-    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" defer></script>
+    <!-- 카카오 SDK -->
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js"></script>
     
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(45deg, #FF6B6B, #4ECDC4);
-            --accent-gradient: linear-gradient(45deg, #FFD700, #FFA500);
-            --success-gradient: linear-gradient(45deg, #28a745, #20c997);
-            --white-alpha: rgba(255,255,255,0.95);
-            --shadow: 0 8px 32px rgba(0,0,0,0.1);
-            --border-radius: 20px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
         * {
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box;
-        }
-        
-        html {
-            scroll-behavior: smooth;
+            margin: 0; padding: 0; box-sizing: border-box;
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Malgun Gothic', sans-serif;
-            background: var(--primary-gradient);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             line-height: 1.6;
-            overflow-x: hidden;
         }
         
         .container {
@@ -55,24 +36,21 @@
         
         .header {
             text-align: center;
-            background: var(--white-alpha);
+            background: rgba(255,255,255,0.95);
             padding: 2rem 1rem;
-            border-radius: var(--border-radius);
+            border-radius: 20px;
             margin-bottom: 1rem;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-            animation: fadeInUp 0.8s ease-out;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
         
         .header h1 {
             font-size: clamp(1.8rem, 4vw, 2.5rem);
             margin-bottom: 0.5rem;
-            background: var(--primary-gradient);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
             -webkit-text-fill-color: transparent;
-            font-weight: 800;
         }
         
         .stats {
@@ -89,19 +67,29 @@
             border-radius: 25px;
             font-size: 0.9rem;
             color: #666;
-            font-weight: 600;
-            animation: slideInUp 0.6s ease-out;
         }
         
         .upload-section {
-            background: var(--white-alpha);
+            background: rgba(255,255,255,0.95);
             padding: 1.5rem;
-            border-radius: var(--border-radius);
+            border-radius: 20px;
             margin-bottom: 1rem;
             text-align: center;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-            animation: fadeInUp 0.8s ease-out 0.2s both;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 2px dashed #ddd;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-section:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .upload-section.dragover {
+            border-color: #667eea !important;
+            background: rgba(102, 126, 234, 0.1) !important;
+            transform: scale(1.02);
         }
         
         .file-input-wrapper {
@@ -115,30 +103,16 @@
         }
         
         .file-input-button {
-            background: var(--primary-gradient);
+            background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
             padding: 1rem 2rem;
             border-radius: 50px;
             cursor: pointer;
             font-size: 1.1rem;
             font-weight: bold;
-            transition: var(--transition);
+            transition: all 0.3s ease;
             display: inline-block;
             text-decoration: none;
-            border: none;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .file-input-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
         }
         
         .file-input-button:hover {
@@ -146,29 +120,21 @@
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
         
-        .file-input-button:hover::before {
-            left: 100%;
-        }
-        
         .preview-container {
             margin: 1rem 0;
             max-width: 300px;
             margin-left: auto;
             margin-right: auto;
-            animation: zoomIn 0.5s ease-out;
         }
         
         .preview-image {
             width: 100%;
-            max-height: 400px;
-            object-fit: cover;
             border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         
         .analyze-button {
-            background: var(--secondary-gradient);
+            background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
             padding: 1rem 2rem;
             border: none;
@@ -177,34 +143,20 @@
             cursor: pointer;
             font-size: 1.1rem;
             font-weight: bold;
-            transition: var(--transition);
+            transition: all 0.3s ease;
         }
         
         .analyze-button:hover {
             transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
-        }
-        
-        .reset-button {
-            background: #6c757d;
-            color: white;
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 25px;
-            margin-left: 0.5rem;
-            cursor: pointer;
-            transition: var(--transition);
         }
         
         .loading {
             display: none;
             text-align: center;
             padding: 2rem;
-            background: var(--white-alpha);
-            border-radius: var(--border-radius);
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
             margin-bottom: 1rem;
-            backdrop-filter: blur(10px);
-            animation: fadeIn 0.5s ease-out;
         }
         
         .spinner {
@@ -223,53 +175,93 @@
         }
         
         .result-section {
-            background: var(--white-alpha);
+            background: rgba(255,255,255,0.95);
             padding: 2rem 1rem;
-            border-radius: var(--border-radius);
+            border-radius: 20px;
             margin-bottom: 1rem;
             text-align: center;
-            box-shadow: var(--shadow);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
             display: none;
-            backdrop-filter: blur(10px);
-            animation: bounceIn 0.8s ease-out;
+        }
+        
+        .aura-result {
+            background: linear-gradient(45deg, #FFE0B2, #FFCCBC);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .aura-result::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
         }
         
         .aura-color {
             font-size: clamp(2rem, 6vw, 3rem);
             margin: 1rem 0;
-            font-weight: 800;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            animation: pulse 2s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
         }
         
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        .aura-description {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin: 1rem 0;
-            color: #555;
-            font-weight: 500;
-        }
-        
-        .premium-offer {
-            background: var(--accent-gradient);
+        .aura-color-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 1rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
             color: white;
-            padding: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .traits-section {
+            background: linear-gradient(45deg, #E8F5E8, #F1F8E9);
+            padding: 1.5rem;
             border-radius: 15px;
             margin: 1rem 0;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
         }
         
-        .premium-offer:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        .traits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .trait-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .trait-emoji {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .trait-text {
+            font-weight: bold;
+            color: #667eea;
         }
         
         .share-buttons {
@@ -286,7 +278,7 @@
             border-radius: 25px;
             text-decoration: none;
             font-size: 0.9rem;
-            transition: var(--transition);
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
             font-weight: bold;
@@ -296,902 +288,923 @@
             transform: translateY(-2px);
             color: white;
         }
-        
-        .share-kakao {
-            background: linear-gradient(45deg, #FEE500, #FFCD00);
-            color: #3C1E1E !important;
+
+        .share-button.kakao {
+            background: linear-gradient(45deg, #FEE500, #FFEB3B);
+            color: #3A1D1D;
         }
-        
-        .share-instagram {
-            background: linear-gradient(45deg, #E4405F, #C13584, #833AB4);
+
+        .share-button.kakao:hover {
+            color: #3A1D1D;
         }
-        
-        .share-facebook {
+
+        .share-button.instagram {
+            background: linear-gradient(45deg, #E4405F, #9B59B6);
+        }
+
+        .share-button.facebook {
             background: linear-gradient(45deg, #1877F2, #42A5F5);
         }
-        
-        .share-link {
-            background: var(--primary-gradient);
+
+        .share-button.twitter {
+            background: linear-gradient(45deg, #1DA1F2, #0D8BD9);
+        }
+
+        .share-button.general {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        /* 공유 결과 이미지 생성용 캔버스 */
+        #shareCanvas {
+            display: none;
         }
         
-        .restart-button {
-            background: var(--success-gradient);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: var(--transition);
-            margin-top: 2rem;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-        }
-        
-        .restart-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-        }
-        
-        .other-tests-section {
-            background: var(--white-alpha);
-            padding: 2rem 1.5rem;
-            border-radius: var(--border-radius);
-            margin: 2rem 0;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-            animation: fadeInUp 0.8s ease-out 0.5s both;
-        }
-        
-        .other-tests-section h2 {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: #333;
-            font-size: 1.8rem;
-        }
-        
-        .tests-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .test-card {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 2rem 1.5rem;
-            border-radius: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .test-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        .test-card:hover::before {
-            left: 100%;
-        }
-        
-        .test-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
-        
-        .test-card:nth-child(2) {
-            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-        }
-        
-        .test-card:nth-child(2):hover {
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
-        }
-        
-        .test-card:nth-child(3) {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-        }
-        
-        .test-card:nth-child(3):hover {
-            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
-        }
-        
-        .test-card:nth-child(4) {
-            background: linear-gradient(135deg, #9966CC, #663399);
-            box-shadow: 0 4px 15px rgba(153, 102, 204, 0.3);
-        }
-        
-        .test-card:nth-child(4):hover {
-            box-shadow: 0 8px 25px rgba(153, 102, 204, 0.4);
-        }
-        
-        .test-card:nth-child(5) {
-            background: linear-gradient(135deg, #50C878, #32CD32);
-            box-shadow: 0 4px 15px rgba(80, 200, 120, 0.3);
-        }
-        
-        .test-card:nth-child(5):hover {
-            box-shadow: 0 8px 25px rgba(80, 200, 120, 0.4);
-        }
-        
-        .test-card:nth-child(6) {
-            background: linear-gradient(135deg, #FF69B4, #FF1493);
-            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
-        }
-        
-        .test-card:nth-child(6):hover {
-            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
-        }
-        
-        .test-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-        
-        .test-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-        
-        .test-card p {
-            font-size: 0.95rem;
-            opacity: 0.9;
-            line-height: 1.4;
-        }
-        
-        @media (max-width: 768px) {
-            .tests-grid {
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 1rem;
-            }
-            
-            .test-card {
-                padding: 1.5rem 1rem;
-            }
-            
-            .test-icon {
-                font-size: 2rem;
-            }
-            
-            .test-card h3 {
-                font-size: 1.1rem;
-            }
-            
-            .test-card p {
-                font-size: 0.85rem;
-            }
-        }
-        
-        .guide-section {
-            background: var(--white-alpha);
+        .related-tests {
+            background: rgba(255,255,255,0.95);
             padding: 1.5rem;
-            border-radius: var(--border-radius);
+            border-radius: 20px;
             margin: 1rem 0;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-            animation: fadeInUp 0.8s ease-out 0.4s both;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
         
-        .guide-grid {
+        .test-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin-top: 1rem;
         }
         
-        .guide-item {
-            padding: 1rem;
-            background: #f8f9fa;
-            border-radius: 10px;
-            text-align: center;
-            transition: var(--transition);
-            cursor: pointer;
+        .test-card {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-decoration: none;
+            transition: transform 0.3s ease;
         }
         
-        .guide-item:hover {
+        .test-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            background: #fff;
+            color: white;
         }
         
         .floating-cta {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: var(--secondary-gradient);
+            background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
             padding: 1rem;
             border-radius: 50px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.2);
             cursor: pointer;
             z-index: 1000;
-            animation: float 3s ease-in-out infinite;
-            font-weight: bold;
-            border: none;
+            animation: pulse 2s infinite;
         }
         
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
-        
+
         .footer {
-            background: var(--white-alpha);
+            background: rgba(255,255,255,0.95);
             padding: 2rem 1rem;
-            border-radius: var(--border-radius);
+            border-radius: 20px;
             margin-top: 2rem;
             text-align: center;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(10px);
-            animation: fadeInUp 0.8s ease-out 0.6s both;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
-        
+
         .footer a {
             color: #667eea;
             text-decoration: none;
-            transition: var(--transition);
+            transition: color 0.3s ease;
         }
-        
+
         .footer a:hover {
             color: #764ba2;
-            text-decoration: underline;
-        }
-        
-        .share-toast {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #4CAF50;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            z-index: 1001;
-            opacity: 0;
-            transition: var(--transition);
-            font-weight: 600;
-            box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
-        }
-        
-        .share-toast.show {
-            opacity: 1;
-            animation: slideUp 0.5s ease-out;
-        }
-        
-        @keyframes slideUp {
-            from { transform: translate(-50%, 20px); opacity: 0; }
-            to { transform: translate(-50%, 0); opacity: 1; }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes zoomIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        @keyframes bounceIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.3);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.05);
-            }
-            70% {
-                transform: scale(0.9);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
         }
         
         @media (max-width: 768px) {
-            .container { 
-                padding: 5px; 
-            }
-            
-            .share-buttons { 
-                flex-direction: column; 
-                align-items: center; 
-                gap: 0.7rem;
-            }
-            
-            .share-button {
-                width: 200px;
-            }
-            
-            .floating-cta { 
-                bottom: 10px; 
-                right: 10px;
-                padding: 0.8rem;
-                font-size: 0.9rem;
-            }
-            
-            .guide-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .header {
-                padding: 1.5rem 1rem;
-            }
-            
-            .upload-section {
-                padding: 1rem;
-            }
-            
-            .result-section {
-                padding: 1.5rem 1rem;
-            }
+            .container { padding: 5px; }
+            .traits-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <!-- 헤더 -->
-        <header class="header">
+        <div class="header">
             <h1>🔮 AI 오라 색상 테스트</h1>
-            <p>인공지능이 당신의 얼굴을 분석해 현재의 오라 색상을 알려드립니다!</p>
+            <p>AI가 당신의 얼굴을 분석해 현재의 오라 색상을 알려드립니다!</p>
             <div class="stats">
                 <span class="stat-item">👥 누적 테스트 247,892명</span>
                 <span class="stat-item">⭐ 만족도 98.2%</span>
                 <span class="stat-item">🎯 정확도 92%</span>
             </div>
-        </header>
+        </div>
         
         <!-- 업로드 섹션 -->
-        <section class="upload-section" id="uploadSection">
+        <div class="upload-section" id="uploadSection">
             <h2>📸 얼굴 사진을 업로드하세요</h2>
             <p>정면을 바라보는 셀카가 가장 정확합니다!</p>
+            <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                📱 클릭하거나 이미지를 드래그해서 업로드하세요
+            </p>
             
             <div class="file-input-wrapper">
-                <input type="file" id="imageUpload" class="file-input" accept="image/*">
-                <button type="button" class="file-input-button" onclick="triggerFileUpload()">
-                    📱 사진 선택하기
-                </button>
+                <input type="file" id="imageUpload" class="file-input" accept="image/*,image/jpeg,image/jpg,image/png,image/gif,image/webp">
+                <label for="imageUpload" class="file-input-button">
+                    🔮 사진 선택하기
+                </label>
             </div>
             
             <div class="preview-container" id="previewContainer" style="display: none;">
-                <img id="previewImage" class="preview-image" alt="업로드된 사진 미리보기">
-                <div style="margin-top: 1rem;">
-                    <button onclick="analyzeImage()" class="analyze-button">
-                        🔮 오라 분석 시작!
-                    </button>
-                    <button onclick="resetUpload()" class="reset-button">
-                        다시 선택
-                    </button>
-                </div>
+                <img id="previewImage" class="preview-image" alt="미리보기">
+                <button onclick="analyzeImage()" class="analyze-button">
+                    ✨ 오라 분석 시작!
+                </button>
+                <button onclick="resetUpload()" style="background: #6c757d; color: white; padding: 0.5rem 1rem; border: none; border-radius: 25px; margin-left: 1rem; cursor: pointer;">
+                    🔄 다시 선택
+                </button>
             </div>
-        </section>
+        </div>
         
         <!-- 로딩 -->
         <div class="loading" id="loading">
             <div class="spinner"></div>
-            <h3>🤖 AI가 당신의 오라를 분석중...</h3>
-            <p id="loadingMessage">감정 상태, 에너지 레벨, 색상 분위기를 종합 분석하고 있습니다</p>
+            <h3>🔮 AI가 당신의 오라를 분석중...</h3>
+            <p>감정 상태, 에너지 레벨, 색상 분위기를 종합 분석하고 있습니다</p>
         </div>
         
         <!-- 결과 섹션 -->
-        <section class="result-section" id="resultSection">
+        <div class="result-section" id="resultSection">
             <h2>✨ 당신의 오라 분석 결과</h2>
-            <div class="aura-color" id="auraColor">🟡 황금 오라</div>
-            <div class="aura-description" id="auraDescription">
-                창의력과 희망이 넘치는 밝은 에너지를 가지고 있습니다.
+            
+            <div class="aura-result">
+                <div class="aura-color-circle" id="auraColorCircle">🟡</div>
+                <div class="aura-color" id="auraColor">황금 오라</div>
+                <p id="auraDescription">창의력과 희망이 넘치는 밝은 에너지를 가지고 있습니다.</p>
             </div>
             
-            <!-- 프리미엄 오퍼 -->
-            <div class="premium-offer" onclick="openPremium()">
-                🌟 <strong>프리미엄 분석</strong> 🌟<br>
-                상세 해석 + 일주일 운세 + 궁합 분석<br>
-                <small>지금 990원 → 특가 490원!</small>
+            <div class="traits-section">
+                <h3>🌟 당신의 오라 특성</h3>
+                <div class="traits-grid" id="traitsGrid">
+                    <!-- JavaScript로 동적 생성 -->
+                </div>
             </div>
             
             <div class="share-buttons">
-                <button class="share-button share-kakao" onclick="shareToKakao()">💛 카톡공유</button>
-                <button class="share-button share-instagram" onclick="shareToInstagram()">📷 인스타</button>
-                <button class="share-button share-facebook" onclick="shareToFacebook()">📘 페북</button>
-                <button class="share-button share-link" onclick="copyLink()">🔗 링크</button>
+                <button class="share-button kakao" onclick="shareToKakao()">💛 카카오톡</button>
+                <button class="share-button instagram" onclick="shareToInstagram()">📷 인스타그램</button>
+                <button class="share-button facebook" onclick="shareToFacebook()">📘 페이스북</button>
+                <button class="share-button twitter" onclick="shareToTwitter()">🐦 트위터</button>
+                <button class="share-button general" onclick="shareGeneral()">🔗 링크복사</button>
             </div>
-            
-            <!-- 다시하기 버튼 -->
-            <div style="text-align: center;">
-                <button onclick="restartTest()" class="restart-button">
-                    🔄 다시 테스트하기
-                </button>
+
+            <div style="margin-top: 1rem;">
+                <button class="share-button general" onclick="retakeTest()">🔄 다시 테스트</button>
+                <button class="share-button general" onclick="saveResult()">💾 결과 저장</button>
             </div>
-        </section>
+        </div>
         
-        <!-- 가이드 섹션 (숨김) -->
-        <section class="guide-section" style="display: none;">
-            <h2>🎨 오라 색상별 특징</h2>
-            <div class="guide-grid" id="guideGrid">
-                <!-- JavaScript로 동적 생성 -->
-            </div>
-        </section>
-        
-        <!-- 다른 AI 테스트 섹션 -->
-        <section class="other-tests-section">
+        <!-- 연관 테스트 -->
+        <div class="related-tests">
             <h2>🌟 다른 재미있는 AI 테스트</h2>
-            <div class="tests-grid">
-                <div class="test-card" onclick="openTest('animal')">
-                    <div class="test-icon">🐾</div>
-                    <h3>동물상 테스트</h3>
-                    <p>당신의 동물상을 발견해보세요</p>
-                </div>
-                <div class="test-card" onclick="openTest('mbti')">
-                    <div class="test-icon">🧠</div>
-                    <h3>MBTI 얼굴 분석</h3>
-                    <p>얼굴로 알아보는 성격유형</p>
-                </div>
-                <div class="test-card" onclick="openTest('celebrity')">
-                    <div class="test-icon">⭐</div>
-                    <h3>닮은꼴 연예인</h3>
-                    <p>나와 닮은 연예인은 누구일까요?</p>
-                </div>
+            <div class="test-grid">
+                <a href="https://animal-test.site" class="test-card" target="_blank">
+                    <h3>🐾 동물상 궁합 테스트</h3>
+                    <p>나와 어울리는 동물상을 찾아보세요</p>
+                </a>
+                <a href="https://movie-character.site" class="test-card" target="_blank">
+                    <h3>🎬 닮은 영화 캐릭터</h3>
+                    <p>어떤 영화 주인공과 닮았을까요?</p>
+                </a>
+                <a href="https://next-life.site" class="test-card" target="_blank">
+                    <h3>🌈 나의 다음 생애는?</h3>
+                    <p>다음 생에는 어떤 모습일까요?</p>
+                </a>
             </div>
-        </section>
+        </div>
 
         <!-- 푸터 -->
-        <footer class="footer">
-            <nav style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+        <div class="footer">
+            <h3>🔮 AI 오라 색상 테스트</h3>
+            <p>모든 오라가 아름다워요! ✨</p>
+            <div style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                <a href="contact.html">문의하기</a> | 
                 <a href="privacy.html">개인정보처리방침</a> | 
-                <a href="terms.html">이용약관</a> | 
-                <a href="contact.html">문의하기</a>
-            </nav>
+                <a href="terms.html">이용약관</a>
+            </div>
             <p style="margin-top: 1rem; color: #999; font-size: 0.8rem;">
-                © 2025 AI 오라 테스트. All rights reserved.
+                © 2025 AI 오라 색상 테스트. All rights reserved.
             </p>
-        </footer>
+        </div>
     </div>
     
     <!-- 플로팅 CTA -->
-    <button class="floating-cta" onclick="scrollToUpload()">
+    <div class="floating-cta" onclick="scrollToUpload()">
         🔮 테스트하기
-    </button>
-    
-    <!-- 공유 성공 알림 -->
-    <div class="share-toast" id="shareToast">
-        공유가 완료되었습니다! 🎉
     </div>
 
+    <!-- 숨겨진 캔버스 (공유 이미지 생성용) -->
+    <canvas id="shareCanvas" width="600" height="800"></canvas>
+
     <script>
-        // 전역 변수
-        let currentAuraResult = null;
-        let isAnalyzing = false;
-        
+        // 카카오 SDK 초기화 (실제 앱 키로 교체 필요)
+        if (typeof Kakao !== 'undefined') {
+            Kakao.init('YOUR_KAKAO_APP_KEY'); // 실제 카카오 앱 키로 교체해야 합니다
+        }
+
         // 오라 데이터
         const auraData = [
             {
                 emoji: "🟡",
                 name: "황금 오라",
-                desc: "창의력과 희망의 에너지",
-                fullDesc: "창의력과 희망이 넘치는 밝은 에너지를 가지고 있습니다. 주변 사람들에게 긍정적인 영향을 주는 천성의 리더입니다.",
                 color: "#FFD700",
-                keywords: ["창의력", "희망", "리더십", "긍정적", "영감"]
+                desc: "창의력과 희망이 넘치는 밝은 에너지를 가지고 있습니다. 주변 사람들에게 긍정적인 영향을 주는 천성의 리더입니다.",
+                traits: [
+                    {emoji: "💡", text: "창의적"},
+                    {emoji: "🌟", text: "리더십"},
+                    {emoji: "☀️", text: "낙관적"},
+                    {emoji: "🎨", text: "예술적"}
+                ]
             },
             {
                 emoji: "🔴", 
                 name: "루비 오라",
-                desc: "열정과 리더십의 오라",
-                fullDesc: "강렬한 열정과 의지력을 가진 당신은 목표를 향해 돌진하는 용기의 소유자입니다.",
                 color: "#DC143C",
-                keywords: ["열정", "의지력", "용기", "목표지향", "추진력"]
+                desc: "강렬한 열정과 의지력을 가진 당신은 목표를 향해 돌진하는 용기의 소유자입니다.",
+                traits: [
+                    {emoji: "🔥", text: "열정적"},
+                    {emoji: "💪", text: "강인함"},
+                    {emoji: "⚡", text: "에너지"},
+                    {emoji: "🎯", text: "목표지향"}
+                ]
             },
             {
                 emoji: "🔵",
                 name: "사파이어 오라", 
-                desc: "평온과 신뢰의 분위기",
-                fullDesc: "차분하고 신뢰할 수 있는 성격입니다. 깊이 있는 사고와 안정감을 주는 존재감을 가지고 있습니다.",
-                color: "#0066CC",
-                keywords: ["평온", "신뢰", "안정감", "깊이", "차분함"]
+                color: "#0047AB",
+                desc: "차분하고 신뢰할 수 있는 성격입니다. 깊이 있는 사고와 안정감을 주는 존재감을 가지고 있습니다.",
+                traits: [
+                    {emoji: "🧘", text: "평온함"},
+                    {emoji: "🤝", text: "신뢰성"},
+                    {emoji: "🧠", text: "지혜"},
+                    {emoji: "💙", text: "충성심"}
+                ]
             },
             {
                 emoji: "🟢",
                 name: "에메랄드 오라",
-                desc: "치유와 균형의 힘", 
-                fullDesc: "균형잡힌 성격으로 치유의 에너지를 발산합니다. 자연과 조화를 이루며 살아가는 현명한 사람입니다.",
                 color: "#50C878",
-                keywords: ["치유", "균형", "조화", "현명함", "자연친화"]
+                desc: "균형잡힌 성격으로 치유의 에너지를 발산합니다. 자연과 조화를 이루며 살아가는 현명한 사람입니다.",
+                traits: [
+                    {emoji: "🌿", text: "자연친화"},
+                    {emoji: "💚", text: "치유력"},
+                    {emoji: "⚖️", text: "균형감"},
+                    {emoji: "🕊️", text: "평화로움"}
+                ]
             },
             {
                 emoji: "🟣",
                 name: "자수정 오라",
-                desc: "직감과 영성의 오라",
-                fullDesc: "감성이 풍부하고 직관력이 뛰어납니다. 예술적 재능과 영적 감수성을 지닌 특별한 사람입니다.",
                 color: "#9966CC",
-                keywords: ["직감", "영성", "감성", "예술적", "특별함"]
-            },
-            {
-                emoji: "⚫",
-                name: "흑요석 오라", 
-                desc: "신비로운 깊이의 에너지",
-                fullDesc: "신비롭고 카리스마 있는 당신은 강한 내면의 힘을 가지고 있습니다. 깊이 있는 사고와 독특한 매력의 소유자입니다.",
-                color: "#2F2F2F",
-                keywords: ["신비로움", "카리스마", "내면의 힘", "독특함", "깊이"]
+                desc: "감성이 풍부하고 직관력이 뛰어납니다. 예술적 재능과 영적 감수성을 지닌 특별한 사람입니다.",
+                traits: [
+                    {emoji: "🔮", text: "직관적"},
+                    {emoji: "🎭", text: "감성적"},
+                    {emoji: "✨", text: "신비로움"},
+                    {emoji: "🎪", text: "창의성"}
+                ]
             },
             {
                 emoji: "🟠",
-                name: "호박 오라",
-                desc: "따뜻함과 활력의 에너지",
-                fullDesc: "따뜻하고 친근한 성격으로 주변 사람들에게 활력을 불어넣어 줍니다. 사교적이고 낙천적인 매력을 가지고 있어요.",
+                name: "호박색 오라", 
                 color: "#FF8C00",
-                keywords: ["따뜻함", "활력", "사교적", "낙천적", "친근함"]
+                desc: "활발하고 사교적인 성격입니다. 주변을 밝게 만드는 따뜻한 에너지와 유머감각을 가지고 있습니다.",
+                traits: [
+                    {emoji: "😄", text: "유쾌함"},
+                    {emoji: "🤗", text: "사교적"},
+                    {emoji: "🌞", text: "활발함"},
+                    {emoji: "🎉", text: "즐거움"}
+                ]
             },
             {
                 emoji: "🩷",
                 name: "로즈 오라",
-                desc: "사랑과 연민의 빛",
-                fullDesc: "부드럽고 사랑스러운 에너지를 가진 당신은 타인에 대한 깊은 연민과 이해심을 지니고 있습니다. 치유하는 마음의 소유자예요.",
-                color: "#FFB6C1",
-                keywords: ["사랑", "연민", "부드러움", "치유", "이해심"]
+                color: "#FF69B4",
+                desc: "사랑과 compassion이 넘치는 따뜻한 마음을 가지고 있습니다. 배려심 깊고 로맨틱한 성향입니다.",
+                traits: [
+                    {emoji: "💕", text: "사랑스러움"},
+                    {emoji: "🤲", text: "배려심"},
+                    {emoji: "🌸", text: "부드러움"},
+                    {emoji: "💖", text: "로맨틱"}
+                ]
+            },
+            {
+                emoji: "⚫",
+                name: "흑요석 오라", 
+                color: "#2F2F2F",
+                desc: "신비롭고 카리스마 있는 당신은 강한 내면의 힘을 가지고 있습니다. 깊이 있는 사고와 독특한 매력의 소유자입니다.",
+                traits: [
+                    {emoji: "🌙", text: "신비로움"},
+                    {emoji: "💎", text: "카리스마"},
+                    {emoji: "🗿", text: "강인함"},
+                    {emoji: "🎭", text: "독특함"}
+                ]
+            },
+            {
+                emoji: "🟤",
+                name: "브론즈 오라",
+                color: "#CD7F32",
+                desc: "안정적이고 현실적인 사고를 가진 실용주의자입니다. 믿음직하고 꾸준한 노력으로 성취를 이루는 타입입니다.",
+                traits: [
+                    {emoji: "🏔️", text: "안정적"},
+                    {emoji: "🛠️", text: "실용적"},
+                    {emoji: "📈", text: "꾸준함"},
+                    {emoji: "🤝", text: "신뢰감"}
+                ]
+            },
+            {
+                emoji: "⚪",
+                name: "진주 오라",
+                color: "#F8F8FF",
+                desc: "순수하고 깨끗한 마음을 가진 당신은 높은 영성과 순결함을 상징합니다. 평화로운 에너지를 발산합니다.",
+                traits: [
+                    {emoji: "🕊️", text: "순수함"},
+                    {emoji: "✨", text: "영성"},
+                    {emoji: "☮️", text: "평화"},
+                    {emoji: "🤍", text: "깨끗함"}
+                ]
             }
         ];
 
-        // 이미지를 해시로 변환하는 함수 (일관된 결과를 위해)
-        function generateImageHash(imageData) {
-            let hash = 0;
-            const step = Math.max(1, Math.floor(imageData.length / 1000));
-            
-            for (let i = 0; i < imageData.length; i += step * 4) {
-                const r = imageData[i] || 0;
-                const g = imageData[i + 1] || 0;
-                const b = imageData[i + 2] || 0;
-                
-                const pixel = (r << 16) + (g << 8) + b;
-                hash = ((hash << 5) - hash + pixel) & 0xffffffff;
-            }
-            return Math.abs(hash);
-        }
-
-        // 이미지에서 일관된 오라 추출
-        function getAuraFromImage(imageElement) {
-            return new Promise((resolve) => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                const size = 48;
-                canvas.width = size;
-                canvas.height = size;
-                
-                try {
-                    ctx.drawImage(imageElement, 0, 0, size, size);
-                    const imageData = ctx.getImageData(0, 0, size, size).data;
-                    
-                    const hash = generateImageHash(imageData);
-                    const auraIndex = hash % auraData.length;
-                    
-                    console.log('이미지 해시:', hash, '선택된 오라:', auraData[auraIndex].name);
-                    
-                    resolve(auraData[auraIndex]);
-                } catch (error) {
-                    console.error('이미지 분석 오류:', error);
-                    resolve(auraData[0]);
-                }
-            });
-        }
-
-        // 파일 업로드 트리거
-        function triggerFileUpload() {
-            document.getElementById('imageUpload').click();
-        }
-
-        // 업로드 초기화
-        function resetUpload() {
-            document.getElementById('imageUpload').value = '';
-            document.getElementById('previewContainer').style.display = 'none';
-            document.getElementById('uploadSection').style.display = 'block';
-            document.getElementById('resultSection').style.display = 'none';
-        }
-
-        // 이미지 표시
-        function displayImage(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = document.getElementById('previewImage');
-                img.onload = function() {
-                    document.getElementById('previewContainer').style.display = 'block';
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        // 파일 선택 이벤트
+        // 이미지 업로드 처리
         document.getElementById('imageUpload').addEventListener('change', function(e) {
+            console.log('파일 선택 이벤트 발생');
             const file = e.target.files[0];
+            
             if (file) {
-                if (file.size > 10 * 1024 * 1024) {
-                    alert('파일 크기는 10MB 이하로 업로드해주세요.');
-                    return;
-                }
+                console.log('선택된 파일:', file.name, file.type, file.size);
                 
+                // 파일 타입 검증
                 if (!file.type.startsWith('image/')) {
                     alert('이미지 파일만 업로드 가능합니다.');
                     return;
                 }
                 
-                displayImage(file);
+                // 파일 크기 검증 (10MB 제한)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('파일 크기는 10MB 이하여야 합니다.');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    console.log('파일 읽기 완료');
+                    const previewImage = document.getElementById('previewImage');
+                    const previewContainer = document.getElementById('previewContainer');
+                    
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    
+                    // 이미지를 전역 변수에 저장 (일관된 결과를 위해)
+                    window.currentImageData = e.target.result;
+                    
+                    // 이미지 로드 완료 후 스크롤
+                    previewImage.onload = function() {
+                        previewContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    };
+                };
+                
+                reader.onerror = function() {
+                    console.error('파일 읽기 실패');
+                    alert('파일을 읽을 수 없습니다. 다른 이미지를 선택해주세요.');
+                };
+                
+                reader.readAsDataURL(file);
+            } else {
+                console.log('선택된 파일이 없음');
             }
         });
 
-        // 가이드 섹션 생성
-        function generateGuideSections() {
-            const guideGrid = document.getElementById('guideGrid');
-            auraData.forEach((aura, index) => {
-                const item = document.createElement('div');
-                item.className = 'guide-item';
-                item.style.animationDelay = `${index * 0.1}s`;
-                item.innerHTML = `
-                    <div style="font-size: 2rem;">${aura.emoji}</div>
-                    <h3 style="color: ${aura.color};">${aura.name}</h3>
-                    <p>${aura.desc}</p>
-                    <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #999;">
-                        ${aura.keywords.slice(0, 3).join(' · ')}
-                    </div>
-                `;
-                
-                item.addEventListener('mouseenter', () => {
-                    item.style.backgroundColor = aura.color + '15';
-                });
-                
-                item.addEventListener('mouseleave', () => {
-                    item.style.backgroundColor = '';
-                });
-                
-                guideGrid.appendChild(item);
-            });
+        // 사용 제한 관리
+        let testCount = 0;
+        let lastTestTime = 0;
+        const TEST_COOLDOWN = 3000; // 3초 쿨다운
+        const DAILY_LIMIT = 10; // 하루 10회 제한
+
+        // 로컬 스토리지에서 오늘의 테스트 횟수 확인
+        function getTodayTestCount() {
+            const today = new Date().toDateString();
+            const stored = localStorage.getItem('auraTestData');
+            
+            if (stored) {
+                const data = JSON.parse(stored);
+                if (data.date === today) {
+                    return data.count;
+                }
+            }
+            return 0;
         }
 
-        // AI 분석 시뮬레이션
-        async function simulateAIAnalysis() {
-            const steps = [
-                '얼굴 인식 중...',
-                '감정 상태 분석 중...',
-                '에너지 레벨 측정 중...',
-                '오라 색상 계산 중...',
-                '결과 생성 중...'
+        // 오늘의 테스트 횟수 저장
+        function saveTodayTestCount(count) {
+            const today = new Date().toDateString();
+            const data = { date: today, count: count };
+            localStorage.setItem('auraTestData', JSON.stringify(data));
+        }
+
+        // 테스트 가능 여부 확인
+        function canTest() {
+            const now = Date.now();
+            const todayCount = getTodayTestCount();
+            
+            // 쿨다운 체크 (연속 클릭 방지)
+            if (now - lastTestTime < TEST_COOLDOWN) {
+                const remaining = Math.ceil((TEST_COOLDOWN - (now - lastTestTime)) / 1000);
+                alert(`⏰ ${remaining}초 후에 다시 시도해주세요!`);
+                return false;
+            }
+            
+            // 일일 제한 체크 (부드러운 제한)
+            if (todayCount >= DAILY_LIMIT) {
+                showLimitMessage(todayCount);
+                return false;
+            }
+            
+            return true;
+        }
+
+        // 제한 메시지 표시 (강제 차단보다는 안내)
+        function showLimitMessage(count) {
+            const messages = [
+                `🎯 오늘 ${count}번째 테스트네요! 정말 열심이시군요!`,
+                `🔥 이미 충분히 즐기셨어요! 친구들과 공유해보는 건 어떨까요?`,
+                `⭐ 내일 다시 오시면 새로운 재미가 기다려요!`,
+                `💝 결과가 마음에 드셨나요? SNS에 공유해보세요!`
             ];
             
-            for (let i = 0; i < steps.length; i++) {
-                document.getElementById('loadingMessage').textContent = steps[i];
-                await new Promise(resolve => setTimeout(resolve, 600));
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            // 부드러운 안내 (강제 차단 X)
+            if (confirm(`${randomMessage}\n\n그래도 계속 테스트하시겠어요?`)) {
+                return true; // 사용자가 원하면 계속 허용
             }
+            
+            return false;
         }
 
-        // 오라 분석
-        async function analyzeImage() {
-            if (isAnalyzing) return;
+        // 이미지 기반 오라 결정 함수
+        function getAuraFromImage(imageData) {
+            if (!imageData) {
+                // 이미지가 없으면 랜덤
+                return auraData[Math.floor(Math.random() * auraData.length)];
+            }
             
-            try {
-                isAnalyzing = true;
-                document.getElementById('loading').style.display = 'block';
-                document.getElementById('uploadSection').style.display = 'none';
+            // 이미지 데이터에서 해시 생성
+            const hash = simpleHash(imageData);
+            
+            // 해시를 기반으로 오라 결정 (항상 동일한 결과)
+            const auraIndex = hash % auraData.length;
+            
+            console.log('이미지 해시:', hash, '오라 인덱스:', auraIndex);
+            
+            return auraData[auraIndex];
+        }
+
+        // 업로드 초기화 함수
+        function resetUpload() {
+            const fileInput = document.getElementById('imageUpload');
+            const previewContainer = document.getElementById('previewContainer');
+            
+            fileInput.value = '';
+            previewContainer.style.display = 'none';
+            
+            // 저장된 이미지 데이터도 초기화
+            window.currentImageData = null;
+            
+            console.log('업로드 초기화 완료');
+        }
+
+        // 드래그 앤 드롭 기능
+        const uploadSection = document.getElementById('uploadSection');
+        
+        uploadSection.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadSection.classList.add('dragover');
+        });
+        
+        uploadSection.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadSection.classList.remove('dragover');
+        });
+        
+        uploadSection.addEventListener('drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadSection.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            console.log('드롭된 파일 수:', files.length);
+            
+            if (files.length > 0) {
+                const file = files[0];
                 
-                const imageElement = document.getElementById('previewImage');
+                // 파일 타입 검증
+                if (!file.type.startsWith('image/')) {
+                    alert('이미지 파일만 업로드 가능합니다.');
+                    return;
+                }
                 
-                // AI 분석 시뮬레이션
-                await simulateAIAnalysis();
+                const fileInput = document.getElementById('imageUpload');
                 
-                // 이미지에서 일관된 오라 추출
-                const selectedAura = await getAuraFromImage(imageElement);
-                currentAuraResult = selectedAura;
+                // FileList 객체 생성
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                fileInput.files = dt.files;
                 
-                // 결과 표시
-                document.getElementById('auraColor').textContent = `${selectedAura.emoji} ${selectedAura.name}`;
-                document.getElementById('auraDescription').textContent = selectedAura.fullDesc;
+                // 수동으로 change 이벤트 발생
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
+            }
+        });
+
+        // 모바일 터치 이벤트 처리
+        uploadSection.addEventListener('touchstart', function(e) {
+            const fileInput = document.getElementById('imageUpload');
+            fileInput.click();
+        });
+
+        // 간단한 해시 함수 (이미지 데이터 기반)
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // 32비트 정수로 변환
+            }
+            return Math.abs(hash);
+        }
+
+        // 오라 분석 (제한 체크 포함)
+        function analyzeImage() {
+            // 테스트 가능 여부 확인
+            if (!canTest()) {
+                return;
+            }
+            
+            document.getElementById('loading').style.display = 'block';
+            document.querySelector('.upload-section').style.display = 'none';
+            
+            // 테스트 횟수 및 시간 기록
+            const todayCount = getTodayTestCount() + 1;
+            saveTodayTestCount(todayCount);
+            lastTestTime = Date.now();
+            
+            setTimeout(() => {
+                // 이미지 기반으로 일관된 결과 생성
+                const selectedAura = getAuraFromImage(window.currentImageData);
+                
+                // 오라 색상 원 스타일 적용
+                const auraColorCircle = document.getElementById('auraColorCircle');
+                auraColorCircle.style.background = `linear-gradient(45deg, ${selectedAura.color}, ${selectedAura.color}cc)`;
+                auraColorCircle.textContent = selectedAura.emoji;
+                
+                document.getElementById('auraColor').textContent = selectedAura.name;
+                document.getElementById('auraDescription').textContent = selectedAura.desc;
+                
+                // 특성 표시
+                const traitsGrid = document.getElementById('traitsGrid');
+                traitsGrid.innerHTML = '';
+                selectedAura.traits.forEach(trait => {
+                    const item = document.createElement('div');
+                    item.className = 'trait-item';
+                    item.innerHTML = `
+                        <div class="trait-emoji">${trait.emoji}</div>
+                        <div class="trait-text">${trait.text}</div>
+                    `;
+                    traitsGrid.appendChild(item);
+                });
+                
+                // 결과를 전역 변수에 저장 (공유 기능을 위해)
+                window.currentAuraResult = selectedAura;
                 
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('resultSection').style.display = 'block';
                 
-                // 결과 섹션으로 스크롤
+                // 테스트 횟수 표시 (5회 이상부터)
+                if (todayCount >= 5) {
+                    const countMessage = document.createElement('div');
+                    countMessage.style.cssText = `
+                        background: linear-gradient(45deg, #FFE0B2, #FFCCBC);
+                        padding: 0.5rem 1rem;
+                        border-radius: 15px;
+                        margin: 1rem 0;
+                        font-size: 0.9rem;
+                        color: #667eea;
+                    `;
+                    countMessage.innerHTML = `🎯 오늘 ${todayCount}번째 테스트! 정말 열심이네요! ✨`;
+                    
+                    const resultSection = document.getElementById('resultSection');
+                    resultSection.insertBefore(countMessage, resultSection.children[1]);
+                }
+                
                 document.getElementById('resultSection').scrollIntoView({behavior: 'smooth'});
-                
-                // 분석 완료 애니메이션
-                setTimeout(() => {
-                    document.getElementById('resultSection').style.transform = 'scale(1.02)';
-                    setTimeout(() => {
-                        document.getElementById('resultSection').style.transform = 'scale(1)';
-                    }, 200);
-                }, 100);
-                
-            } catch (error) {
-                console.error('분석 중 오류 발생:', error);
-                const fallbackAura = auraData[0];
-                currentAuraResult = fallbackAura;
-                
-                document.getElementById('auraColor').textContent = `${fallbackAura.emoji} ${fallbackAura.name}`;
-                document.getElementById('auraDescription').textContent = fallbackAura.fullDesc;
-                
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('resultSection').style.display = 'block';
-                document.getElementById('resultSection').scrollIntoView({behavior: 'smooth'});
-            } finally {
-                isAnalyzing = false;
+            }, 3000);
+        }
+
+        // 공유용 이미지 생성
+        function generateShareImage() {
+            if (!window.currentAuraResult) {
+                alert('먼저 오라 분석을 완료해주세요!');
+                return null;
             }
+
+            const canvas = document.getElementById('shareCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 배경 그라디언트
+            const gradient = ctx.createLinearGradient(0, 0, 0, 800);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 600, 800);
+            
+            // 반투명 흰색 배경
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            roundRect(ctx, 50, 100, 500, 600, 20);
+            ctx.fill();
+            
+            // 제목
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 32px Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('🔮 AI 오라 색상 테스트', 300, 160);
+            
+            // 오라 색상 원
+            ctx.fillStyle = window.currentAuraResult.color;
+            ctx.beginPath();
+            ctx.arc(300, 250, 60, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // 오라 이모지
+            ctx.font = '60px Arial, sans-serif';
+            ctx.fillStyle = 'white';
+            ctx.fillText(window.currentAuraResult.emoji, 300, 265);
+            
+            // 오라 이름
+            ctx.fillStyle = '#667eea';
+            ctx.font = 'bold 48px Arial, sans-serif';
+            ctx.fillText(window.currentAuraResult.name, 300, 350);
+            
+            // 설명
+            ctx.fillStyle = '#555';
+            ctx.font = '20px Arial, sans-serif';
+            ctx.textAlign = 'center';
+            const lines = wrapText(ctx, window.currentAuraResult.desc, 300, 400, 400, 28);
+            
+            // 특성 표시
+            if (window.currentAuraResult.traits && window.currentAuraResult.traits.length > 0) {
+                ctx.fillStyle = '#667eea';
+                ctx.font = 'bold 24px Arial, sans-serif';
+                ctx.fillText('✨ 주요 특성', 300, 520);
+                
+                const trait1 = window.currentAuraResult.traits[0];
+                const trait2 = window.currentAuraResult.traits[1] || trait1;
+                ctx.font = '18px Arial, sans-serif';
+                ctx.fillText(`${trait1.emoji} ${trait1.text}  ${trait2.emoji} ${trait2.text}`, 300, 560);
+            }
+            
+            // 하단 URL
+            ctx.fillStyle = '#999';
+            ctx.font = '18px Arial, sans-serif';
+            ctx.fillText('🌟 AI 오라 테스트에서 더 많은 분석을!', 300, 650);
+            
+            return canvas.toDataURL('image/png');
         }
 
-        // 테스트 다시하기
-        function restartTest() {
-            document.getElementById('resultSection').style.display = 'none';
-            document.getElementById('uploadSection').style.display = 'block';
+        // 텍스트 줄바꿈 함수
+        function wrapText(context, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            let lines = [];
             
-            resetUpload();
-            currentAuraResult = null;
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = context.measureText(testLine);
+                const testWidth = metrics.width;
+                
+                if (testWidth > maxWidth && n > 0) {
+                    lines.push(line);
+                    line = words[n] + ' ';
+                } else {
+                    line = testLine;
+                }
+            }
+            lines.push(line);
             
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            // 실제 텍스트 그리기
+            for (let i = 0; i < lines.length; i++) {
+                context.fillText(lines[i], x, y + (i * lineHeight));
+            }
             
-            showShareToast('새로운 테스트를 시작해보세요! 🔮');
+            return lines;
         }
 
-        // 프리미엄 오퍼
-        function openPremium() {
-            alert('💎 프리미엄 상세 분석 서비스 준비중입니다!\n\n포함 내용:\n• 상세 성격 분석\n• 일주일 운세\n• 궁합 분석\n• 맞춤형 조언\n\n곧 만나요! 🌟');
+        // Canvas RoundRect Polyfill
+        function roundRect(ctx, x, y, w, h, r) {
+            if (w < 2 * r) r = w / 2;
+            if (h < 2 * r) r = h / 2;
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
+            return ctx;
         }
 
         // 카카오톡 공유
         function shareToKakao() {
-            if (!currentAuraResult) {
-                alert('먼저 오라 테스트를 완료해주세요!');
+            console.log('카카오톡 공유 시작');
+            
+            if (!window.currentAuraResult) {
+                alert('먼저 오라 분석을 완료해주세요!');
                 return;
             }
+
+            const shareText = `🔮 AI 오라 색상 테스트 결과!\n\n${window.currentAuraResult.emoji} ${window.currentAuraResult.name}\n${window.currentAuraResult.desc}\n\n나도 테스트해보기: ${window.location.href}`;
             
-            const aura = currentAuraResult;
-            
-            if (typeof Kakao === 'undefined' || !Kakao.isInitialized()) {
-                copyLink('카카오톡 공유 준비중입니다. 링크를 복사했습니다! 💛');
-                return;
-            }
-            
-            try {
-                Kakao.Share.sendDefault({
-                    objectType: 'feed',
-                    content: {
-                        title: '🔮 내 오라 색상 테스트 결과',
-                        description: `${aura.emoji} ${aura.name}\n\n${aura.fullDesc}\n\n당신의 오라는 어떤 색일까요?`,
-                        imageUrl: 'https://www.myauracolorcheck.site/og-image.jpg',
-                        link: {
-                            mobileWebUrl: window.location.href,
-                            webUrl: window.location.href,
-                        },
-                    },
-                    buttons: [
-                        {
-                            title: '나도 테스트하기',
+            // 카카오 SDK 확인
+            if (typeof Kakao !== 'undefined' && Kakao.isInitialized && Kakao.isInitialized()) {
+                try {
+                    Kakao.Share.sendDefault({
+                        objectType: 'feed',
+                        content: {
+                            title: '🔮 AI 오라 색상 테스트 결과!',
+                            description: `${window.currentAuraResult.emoji} ${window.currentAuraResult.name}\n${window.currentAuraResult.desc}`,
+                            imageUrl: 'https://your-domain.com/og-image.jpg',
                             link: {
                                 mobileWebUrl: window.location.href,
                                 webUrl: window.location.href,
                             },
+                        },
+                        buttons: [
+                            {
+                                title: '나도 테스트하기',
+                                link: {
+                                    mobileWebUrl: window.location.href,
+                                    webUrl: window.location.href,
+                                },
+                            },
+                        ],
+                    });
+                } catch (error) {
+                    console.error('카카오 SDK 에러:', error);
+                    fallbackKakaoShare(shareText);
+                }
+            } else {
+                fallbackKakaoShare(shareText);
+            }
+        }
+
+        // 카카오톡 폴백 공유
+        function fallbackKakaoShare(shareText) {
+            // 모바일에서 카카오톡 앱으로 직접 공유 시도
+            if (/Mobi|Android/i.test(navigator.userAgent)) {
+                try {
+                    const kakaoUrl = `kakaotalk://share/text?text=${encodeURIComponent(shareText)}`;
+                    window.location.href = kakaoUrl;
+                    
+                    setTimeout(() => {
+                        if (navigator.share) {
+                            navigator.share({
+                                title: '🔮 AI 오라 색상 테스트',
+                                text: shareText,
+                                url: window.location.href
+                            }).catch(error => {
+                                copyToClipboard(shareText);
+                            });
+                        } else {
+                            copyToClipboard(shareText);
                         }
-                    ],
-                    success: () => {
-                        showShareToast('카카오톡으로 공유되었습니다! 💛');
-                    },
-                    fail: (error) => {
-                        console.warn('카카오톡 공유 실패:', error);
-                        copyLink('카카오톡 공유가 지원되지 않는 환경입니다. 링크를 복사했습니다!');
-                    }
-                });
-            } catch (error) {
-                copyLink('카카오톡 공유 중 오류가 발생했습니다. 링크를 복사했습니다!');
+                    }, 3000);
+                } catch (error) {
+                    copyToClipboard(shareText);
+                }
+            } else {
+                copyToClipboard(shareText);
             }
         }
 
         // 인스타그램 공유
         function shareToInstagram() {
-            if (!currentAuraResult) {
-                alert('먼저 오라 테스트를 완료해주세요!');
+            if (!window.currentAuraResult) {
+                alert('먼저 오라 분석을 완료해주세요!');
                 return;
             }
             
-            const aura = currentAuraResult;
-            const hashtags = ['오라테스트', 'AI테스트', '성격분석', aura.name.replace(' ', ''), ...aura.keywords.slice(0, 3)];
+            const shareImageData = generateShareImage();
+            if (!shareImageData) return;
             
-            const instagramText = `🔮 AI 오라 색상 테스트 결과
-
-${aura.emoji} 내 오라는 ${aura.name}!
-
-${aura.fullDesc}
-
-당신의 오라는 어떤 색일까요?
-
-#${hashtags.join(' #')}
-
-${window.location.href}`;
+            const link = document.createElement('a');
+            link.download = `오라테스트_${window.currentAuraResult.name.replace(' ', '_')}.png`;
+            link.href = shareImageData;
             
-            navigator.clipboard.writeText(instagramText).then(() => {
-                showShareToast('인스타그램용 텍스트가 복사되었습니다! 📷');
-                
-                if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            if (/Mobi|Android/i.test(navigator.userAgent)) {
+                link.click();
+                setTimeout(() => {
+                    const instagramUrl = 'instagram://camera';
+                    window.location.href = instagramUrl;
+                    
                     setTimeout(() => {
-                        try {
-                            window.open('instagram://camera');
-                        } catch (e) {
-                            // 인스타그램 앱이 없으면 무시
-                        }
-                    }, 1500);
-                }
-            }).catch(() => {
-                alert(`인스타그램용 텍스트:\n\n${instagramText}`);
-            });
+                        window.open('https://www.instagram.com/', '_blank');
+                    }, 2000);
+                }, 3000);
+            } else {
+                link.click();
+                window.open('https://www.instagram.com/', '_blank');
+                alert('이미지가 다운로드되었습니다!\n인스타그램에서 업로드해보세요 📷');
+            }
         }
 
         // 페이스북 공유
         function shareToFacebook() {
-            if (!currentAuraResult) {
-                alert('먼저 오라 테스트를 완료해주세요!');
+            if (!window.currentAuraResult) {
+                alert('먼저 오라 분석을 완료해주세요!');
                 return;
             }
+
+            const shareUrl = encodeURIComponent(window.location.href);
+            const shareText = encodeURIComponent(`🔮 AI 오라 색상 테스트에서 ${window.currentAuraResult.emoji} ${window.currentAuraResult.name}이 나왔어요!`);
             
-            const url = encodeURIComponent(window.location.href);
-            const title = encodeURIComponent(`🔮 내 오라는 ${currentAuraResult.name}! AI 오라 색상 테스트`);
-            
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&t=${title}`, '_blank', 'width=600,height=400');
-            showShareToast('페이스북으로 공유되었습니다! 📘');
+            const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}&quote=${shareText}`;
+            window.open(facebookUrl, '_blank', 'width=600,height=400');
         }
 
-        // 링크 복사
-        function copyLink(customMessage = null) {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                const message = customMessage || '링크가 복사되었습니다! 친구들과 공유해보세요 🎉';
-                showShareToast(message);
-            }).catch(() => {
+        // 트위터 공유
+        function shareToTwitter() {
+            if (!window.currentAuraResult) {
+                alert('먼저 오라 분석을 완료해주세요!');
+                return;
+            }
+
+            const shareText = encodeURIComponent(`🔮 AI 오라 색상 테스트 결과: ${window.currentAuraResult.emoji} ${window.currentAuraResult.name}! ${window.currentAuraResult.desc.substring(0, 100)}...`);
+            const shareUrl = encodeURIComponent(window.location.href);
+            const hashtags = encodeURIComponent('오라테스트,AI테스트,성격분석');
+            
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}&hashtags=${hashtags}`;
+            window.open(twitterUrl, '_blank', 'width=600,height=400');
+        }
+
+        // 일반 공유 (링크 복사)
+        function shareGeneral() {
+            if (!window.currentAuraResult) {
+                alert('먼저 오라 분석을 완료해주세요!');
+                return;
+            }
+
+            const shareText = `🔮 AI 오라 색상 테스트 결과!\n\n${window.currentAuraResult.emoji} ${window.currentAuraResult.name}\n${window.currentAuraResult.desc}\n\n나도 테스트해보기: ${window.location.href}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: '🔮 AI 오라 색상 테스트',
+                    text: shareText,
+                    url: window.location.href
+                }).catch(error => {
+                    copyToClipboard(shareText);
+                });
+            } else {
+                copyToClipboard(shareText);
+            }
+        }
+
+        // 클립보드에 복사
+        function copyToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('🔮 오라 테스트 결과가 복사되었습니다!\n\n원하는 곳에 붙여넣기해서 공유해보세요! ✨');
+                }).catch(error => {
+                    fallbackCopyToClipboard(text);
+                });
+            } else {
+                fallbackCopyToClipboard(text);
+            }
+        }
+
+        // 클립보드 복사 폴백
+        function fallbackCopyToClipboard(text) {
+            try {
                 const textArea = document.createElement('textarea');
-                textArea.value = window.location.href;
+                textArea.value = text;
                 textArea.style.position = 'fixed';
                 textArea.style.left = '-999999px';
                 textArea.style.top = '-999999px';
@@ -1199,76 +1212,52 @@ ${window.location.href}`;
                 textArea.focus();
                 textArea.select();
                 
-                try {
-                    document.execCommand('copy');
-                    showShareToast('링크가 복사되었습니다! 🔗');
-                } catch (err) {
-                    alert('링크 복사에 실패했습니다. 수동으로 복사해주세요:\n' + window.location.href);
-                }
-                
+                const successful = document.execCommand('copy');
                 document.body.removeChild(textArea);
-            });
-        }
-
-        // 공유 토스트 표시
-        function showShareToast(message) {
-            const toast = document.getElementById('shareToast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // 테스트 섹션으로 스크롤
-        function scrollToUpload() {
-            const uploadSection = document.getElementById('uploadSection');
-            if (uploadSection.style.display === 'none') {
-                restartTest();
-            } else {
-                uploadSection.scrollIntoView({behavior: 'smooth'});
+                
+                if (successful) {
+                    alert('🔮 오라 테스트 결과가 복사되었습니다!\n\n원하는 곳에 붙여넣기해서 공유해보세요! ✨');
+                } else {
+                    alert('복사에 실패했습니다. 수동으로 선택해서 복사해주세요.');
+                }
+            } catch (error) {
+                alert('복사에 실패했습니다. 수동으로 선택해서 복사해주세요.');
             }
         }
 
-        // 다른 테스트 열기
-        function openTest(testType) {
-            const tests = {
-                animal: {
-                    title: '🐾 동물상 테스트',
-                    description: '당신의 동물상을 발견하는 재미있는 테스트입니다!',
-                    url: 'https://www.myanimalface.site'
-                },
-                mbti: {
-                    title: '🧠 MBTI 얼굴 분석',
-                    description: '얼굴로 알아보는 성격유형 테스트입니다!',
-                    url: '#'
-                },
-                celebrity: {
-                    title: '⭐ 닮은꼴 연예인',
-                    description: '나와 닮은 연예인을 찾아보는 테스트입니다!',
-                    url: '#'
-                }
+        function retakeTest() {
+            document.getElementById('resultSection').style.display = 'none';
+            document.querySelector('.upload-section').style.display = 'block';
+            resetUpload();
+            
+            // 저장된 데이터 초기화
+            window.currentImageData = null;
+            window.currentAuraResult = null;
+        }
+
+        function saveResult() {
+            if (!window.currentAuraResult) {
+                alert('저장할 결과가 없습니다!');
+                return;
+            }
+            
+            const resultData = {
+                aura: window.currentAuraResult,
+                timestamp: new Date().toISOString(),
+                url: window.location.href
             };
             
-            const test = tests[testType];
-            if (test) {
-                if (testType === 'animal') {
-                    // 동물상 테스트는 실제 사이트로 이동
-                    window.open(test.url, '_blank');
-                    showShareToast('🐾 동물상 테스트로 이동합니다!');
-                } else {
-                    // 다른 테스트들은 준비중 메시지
-                    alert(`${test.title}\n\n${test.description}\n\n준비중입니다! 곧 만나요 🎉`);
-                }
+            try {
+                localStorage.setItem('auraTestResult', JSON.stringify(resultData));
+                alert('결과가 저장되었습니다! 💾\n\n언제든 다시 확인할 수 있어요.');
+            } catch (e) {
+                alert('결과 저장에 실패했습니다. 스크린샷으로 저장해보세요! 📷');
             }
         }
 
-        // 페이지 로드시 초기화
-        document.addEventListener('DOMContentLoaded', function() {
-            generateGuideSections();
-            console.log('🔮 AI 오라 색상 테스트가 준비되었습니다!');
-        });
+        function scrollToUpload() {
+            document.querySelector('.upload-section').scrollIntoView({behavior: 'smooth'});
+        }
     </script>
 </body>
 </html>
